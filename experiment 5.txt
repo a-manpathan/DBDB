@@ -1,0 +1,34 @@
+experiment 5
+
+select state from tourist_place group by state having
+count(state)=(select max(count(state)) from tourist_place group by
+state);
+
+
+select * from tourist_place where tpid in (select tpid from visits group
+by tpid having count(tpid)= (select max(count(tpid)) from visits group by
+tpid));
+
+
+
+select * from tourist t where t.tid in
+(select tid from visits join tourist_place on
+visits.tpid=tourist_place.tpid where state='karnataka'
+group by tid having count(state) in (select count(state ) from
+tourist_place where state='karnataka') );
+
+
+
+select * from tourist t where t.tid in (select tid from visits join
+tourist_place on visits.tpid=tourist_place.tpid
+group by tid having count(distinct state)
+in (select count(distinct state ) from tourist_place) );
+
+
+
+select * from tourist_place where tpid in (
+select tpid from visits join tourist on visits.tid=tourist.tid
+group by tpid having count(distinct country)=
+(select count(distinct country) from tourist));
+
+

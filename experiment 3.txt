@@ -1,0 +1,22 @@
+SELECT Playername, Playerid, MIN(Age) as AGE FROM PLAYER GROUP BY Playername,Playerid ORDER BY Age
+
+
+SELECT M.Stadiumid, count(M.Matchid) as No_of_Matches, S.Stadiumname
+FROM MATCH M , STADIUM S
+WHERE M.Stadiumid = S.Stadiumid
+GROUP BY M.Stadiumid,S.Stadiumname
+ORDER BY M.Stadiumid
+
+
+SELECT Playerid, Playername FROM PLAYER WHERE Playerid not in (SELECT Captainid FROM CAPTAIN) AND Playerid in (SELECT MOMPlayerid FROM MATCH GROUP by MOMPlayerid HAVING COUNT(MOMPlayerid)>1)
+
+SELECT Winningteamid, count(Winningteamid) as No_of_Matches_WON FROM MATCH GROUP BY Winningteamid ORDER BY COUNT(Winningteamid)
+
+
+
+SELECT M.Winningteamid, T.Teamname, S.Stadiumid, S.Stadiumname
+FROM MATCH M, TEAM2 T, STADIUM S
+WHERE M.Winningteamid = T.Teamid AND
+ M.Stadiumid = S.Stadiumid
+GROUP BY M.Winningteamid, T.Teamname,S.Stadiumid, S.Stadiumname
+HAVING COUNT(DISTINCT M.Stadiumid)=1;

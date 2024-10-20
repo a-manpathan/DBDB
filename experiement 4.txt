@@ -1,0 +1,56 @@
+experiement 4
+ 
+select * from candidate where candidate_id in(select candidate_id from (select candidate_id,count(candidate_id) from contest group by candidate_id having count(candidate_id)>1)der_table);
+
+
+
+> select state from constituency group by state having count(state)=(select max(state) from (select count(*) as state from constituency group by state) as derived_table);
+
+
+delimiter //
+ create procedure insert_voter1(in vid varchar(10),in vname varchar(20),in vage int,in vaddress varchar(30),in vcid varchar(10))
+    ->     begin
+    ->     declare msg varchar(70);
+    ->    if vage>=18
+    ->   then
+    ->   insert into voter values(vid,vname,vage,vaddress,vcid);
+    ->    set msg="row inserted successfully";
+    ->   else
+    ->   set msg="voter age is less than 18";
+    ->    end if;
+    ->   select msg;
+    ->    end;
+    -> //
+
+
+
+call insert_voter1('v07','ramesh',20,'nippani','c04');       
+
+
+
+
+mysql> delimiter //
+mysql> create procedure display_c_voters(in cname varchar(20))
+    -> begin
+    -> select no_of_voters from constituency where name=cname;
+    -> end
+    -> //
+
+call display_c_voters('nippani');
+
+
+
+
+mysql>delimiter //
+Mysql> create trigger T 
+after insert on voter 
+for each row
+begin
+update constituency set no_of_voters=no_of_voters+1 where cid=new.cid;
+end
+//
+
+
+insert into voter values('v08','suresh',25,'nippani','c04');
+
+                  
